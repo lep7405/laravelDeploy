@@ -21,4 +21,11 @@ class DiscountController extends Controller
             'discount' => $discount,
         ]);
     }
+    public function index(){
+        $discounts = Discount::all();
+        return response()->json([
+            'message' => 'Discounts retrieved successfully',
+            'discounts' => $discounts,
+        ]);
+    }
 }
