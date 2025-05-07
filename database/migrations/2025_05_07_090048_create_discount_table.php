@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('discounts', function (Blueprint $table) {
             $table->increments('id')->unsigned();
-            $table->string('shop', 255)->index();
             $table->string('name', 255);
             $table->timestamp('started_at')->nullable();
             $table->timestamp('expired_at')->nullable();
