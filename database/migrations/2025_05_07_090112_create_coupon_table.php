@@ -9,18 +9,19 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('coupon', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('code', 128)->index();
-            $table->string('shop', 255)->nullable()->index();
-            $table->integer('discount_id')->unsigned()->index();
-            $table->integer('times_used')->unsigned()->nullable();
-            $table->boolean ( 'status' )->default ( true );
-            $table->timestamps();
-            $table->foreign('discount_id')->references('id')->on('discounts');
-        });
+        if (!Schema::hasTable('coupon')) {
+            Schema::create('coupon', function (Blueprint $table) {
+                $table->id();
+                $table->string('code', 128);
+                $table->string('shop', 255)->nullable();
+                $table->unsignedInteger('discount_id');
+                $table->unsignedInteger('times_used')->nullable();
+                $table->boolean('status')->default(true);
+                $table->timestamps();
+            });
+        }
     }
 
     /**
