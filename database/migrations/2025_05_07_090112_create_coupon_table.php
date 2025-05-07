@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('coupon')) {
-            Schema::create('coupon', function (Blueprint $table) {
+        if (!Schema::hasTable('coupons')) {
+            Schema::create('coupons', function (Blueprint $table) {
                 $table->id();
                 $table->string('code', 128);
                 $table->string('shop', 255)->nullable();
