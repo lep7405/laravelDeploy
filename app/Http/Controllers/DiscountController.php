@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Discount;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class DiscountController extends Controller
 {
@@ -21,11 +22,49 @@ class DiscountController extends Controller
             'discount' => $discount,
         ]);
     }
-    public function index(){
-        $discounts = Discount::all();
+    public function index(Request $request){
+        $perPage = Arr::get($request->all(), 'perPageDiscount');
+        $search = Arr::get($request->all(), 'searchDiscount');
+        $startedAt = Arr::get($request->all(), 'startedAt');
+        $pageDiscount = Arr::get($request->all(), 'pageDiscount');
+        $query = Discount::query();
+
+        $query = $query->when($search, function ($query) use ($search) {
+            $query
+                ->where(function ($sub) use ($search) {
+                    if ($search) {
+                        $escapedSearch = addcslashes($search, '%_');
+                        $sub->where('name', 'like', "%{$escapedSearch}%");
+                        $sub->orWhere('started_at', 'like', "%{$escapedSearch}%");
+                        $sub->orWhere('expired_at', 'like', "%{$escapedSearch}%");
+                    }
+                })
+                ->orWhere(function ($sub) use ($search) {
+                    if (is_numeric($search)) {
+                        $sub->where('id', $search);
+                    }
+                })
+                ->orWhere(function ($sub) use ($search) {
+                    if ($search) {
+                        $cleanSearch = str_replace('%', '', $search);
+                        $sub->where('value', $cleanSearch);
+                    }
+                })
+            ;
+        });
+        $query = $query->when($startedAt, function ($query) use ($startedAt) {
+            $query->orderBy('started_at', $startedAt);
+        });
+
+        // Thêm orderBy
+        $query = $query->orderBy('id', 'desc');
+
+        // Kết thúc với paginate
+        $query = $query->paginate($perPage, ['*'], 'pageDiscount', $pageDiscount);
+
         return response()->json([
             'message' => 'Discounts retrieved successfully',
-            'discounts' => $discounts,
+            'discounts' => $query,
         ]);
     }
 }
