@@ -24,6 +24,7 @@ class DiscountController extends Controller
         ]);
     }
     public function index(Request $request){
+        Log::debug('✅ Laravel Cloud log test');
         $perPage = Arr::get($request->all(), 'perPageDiscount');
         $search = Arr::get($request->all(), 'searchDiscount');
         $startedAt = Arr::get($request->all(), 'startedAt');
