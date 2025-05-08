@@ -79,6 +79,6 @@ class DiscountController extends Controller
         return response()->json([
             'message' => 'Discounts retrieved successfully',
             'discounts' => $result,
-        ]);
+        ],200);
     }
 }
