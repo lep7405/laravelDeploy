@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Discount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 
 class DiscountController extends Controller
 {
@@ -28,7 +29,6 @@ class DiscountController extends Controller
         $startedAt = Arr::get($request->all(), 'startedAt');
         $pageDiscount = Arr::get($request->all(), 'pageDiscount');
         $query = Discount::query();
-
         $query = $query->when($search, function ($query) use ($search) {
             $query
                 ->where(function ($sub) use ($search) {
@@ -61,7 +61,7 @@ class DiscountController extends Controller
 
         // Kết thúc với paginate
         $query = $query->paginate($perPage, ['*'], 'pageDiscount', $pageDiscount);
-
+        Log::info('query', ['query' => $query]);
         return response()->json([
             'message' => 'Discounts retrieved successfully',
             'discounts' => $query,
