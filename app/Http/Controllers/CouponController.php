@@ -59,5 +59,18 @@ class CouponController extends Controller
             'coupons' => $result,
         ], 200);
     }
-
+    public function store(Request $request){
+        $data = $request->all();
+        $attributes=[
+            'code' => Arr::get($data, 'code'),
+            'shop' => Arr::get($data, 'shop'),
+            'discount_id' => Arr::get($data, 'discountId'),
+            'automatic' => Arr::get($data, 'automatic',0),
+        ];
+        $coupon = Coupon::create($attributes);
+        return response()->json([
+            'message' => 'Coupon created successfully',
+            'coupon' => $coupon,
+        ], 201);
+    }
 }

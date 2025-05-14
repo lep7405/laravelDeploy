@@ -13,6 +13,7 @@ Route::delete('/discount/{id}', [DiscountController::class, 'destroy'])->name('d
 Route::get('/discounts/total', [DiscountController::class, 'totalDiscounts'])->name('discounts.totalDiscounts');
 
 Route::get('/coupons', [CouponController::class, 'index'])->name('coupons.index');
+Route::post('/coupon/create',[CouponController::class, 'store'])->name('coupons.create');
 
 Route::get('/', function () {
     return view('welcome');
