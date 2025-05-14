@@ -90,7 +90,7 @@ class CouponController extends Controller
         $coupon = Coupon::where('code', $code)->first();
         return response()->json([
             'message' => 'Coupon retrieved successfully',
-            'discount' => $coupon,
+            'coupon' => $coupon,
         ], 200);
     }
 
