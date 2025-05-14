@@ -156,4 +156,12 @@ class DiscountController extends Controller
         ], 200);
     }
 
+    public function getIdAndName(){
+        $discounts = Discount::all(['id', 'name']);
+        return response()->json([
+            'message' => 'All discounts retrieved successfully',
+            'discounts' => $discounts,
+        ], 200);
+    }
+
 }
