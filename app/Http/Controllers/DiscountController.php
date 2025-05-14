@@ -106,4 +106,33 @@ class DiscountController extends Controller
             'discount' => $discount,
         ], 200);
     }
+
+
+
+    // Nếu có cột discount_month thì mới thêm vào update
+    public function update(Request $request, $id)
+    {
+        $discount = Discount::find($id);
+        if (!$discount) {
+            return response()->json([
+                'message' => 'Discount not found',
+            ], 404);
+        }
+
+        $discount->update([
+            'name' => $request->input('name'),
+            'type' => $request->input('type'),
+            'value' => $request->input('value'),
+            'usage_limit' => $request->input('usage_limit'),
+            'trial_days' => $request->input('trial_days'),
+            'start_date' => $request->input('start_date'),
+            'end_date' => $request->input('end_date'),
+            'discount_month' => $request->input('discount_month'),
+        ]);
+
+        return response()->json([
+            'message' => 'Discount updated successfully',
+            'discount' => $discount,
+        ], 200);
+    }
 }
