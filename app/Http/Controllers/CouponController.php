@@ -88,11 +88,6 @@ class CouponController extends Controller
     }
     public function findCouponByCode($code){
         $coupon = Coupon::where('code', $code)->first();
-        if (!$coupon) {
-            return response()->json([
-                'message' => 'Coupon not found',
-            ], 404);
-        }
         return response()->json([
             'message' => 'Coupon retrieved successfully',
             'discount' => $coupon,
