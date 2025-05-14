@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('times_used')->unsigned()->default(0);
             $table->integer('trial_days')->default(0);
             $table->boolean('status')->default(true);
+            $table->integer('discount_month')->nullable();
             $table->timestamps();
         });
     }
