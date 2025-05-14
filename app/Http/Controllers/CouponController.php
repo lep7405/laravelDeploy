@@ -74,8 +74,15 @@ class CouponController extends Controller
         ], 201);
     }
 
-    public function findCouponById($id){
-        $coupon = Coupon::find($id);
+    public function findCouponById(Request $request,$id){
+        $withDiscount= $request->input('withDiscount', false);
+        $coupon = Coupon::query()
+            ->when($withDiscount, function ($query) {
+                $query->with(['coupon' => function ($query) {
+                    $query->select('id', 'times_used', 'discount_id');
+                }]);
+            })
+            ->find($id);
         if (!$coupon) {
             return response()->json([
                 'message' => 'Coupon not found',
