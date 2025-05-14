@@ -19,6 +19,7 @@ return new class extends Migration
                 $table->unsignedInteger('discount_id');
                 $table->unsignedInteger('times_used')->nullable();
                 $table->boolean('status')->default(true);
+                $table->boolean('automatic')->default(false);
                 $table->timestamps();
             });
         }
