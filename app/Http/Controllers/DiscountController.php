@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Coupon;
 use App\Models\Discount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -116,7 +117,7 @@ class DiscountController extends Controller
             'id' => $id,
             'data' => $request->all(),
         ]);
-        $discount = Discount::where('id', $id)->first();
+        $discount = Discount::find($id);
         if (!$discount) {
             return response()->json([
                 'message' => 'Discount not found',
@@ -136,6 +137,20 @@ class DiscountController extends Controller
         return response()->json([
             'message' => 'Discount updated successfully',
             'discount' => $discount,
+        ], 200);
+    }
+    public function destroy($id)
+    {
+        Coupon::query()->where('discount_id', $id)->delete();
+        $discount = Discount::find($id);
+        if (!$discount) {
+            return response()->json([
+                'message' => 'Discount not found',
+            ], 404);
+        }
+        $discount->delete();
+        return response()->json([
+            'message' => 'Discount deleted successfully',
         ], 200);
     }
 }
