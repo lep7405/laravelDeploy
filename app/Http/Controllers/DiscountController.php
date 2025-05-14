@@ -116,7 +116,7 @@ class DiscountController extends Controller
             'id' => $id,
             'data' => $request->all(),
         ]);
-        $discount = Discount::where('id', 9)->first();
+        $discount = Discount::where('id', $id)->first();
         if (!$discount) {
             return response()->json([
                 'message' => 'Discount not found',
