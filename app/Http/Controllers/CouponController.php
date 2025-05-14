@@ -100,33 +100,29 @@ class CouponController extends Controller
             'coupon' => $coupon,
         ], 200);
     }
-
     public function update(Request $request, $id)
     {
         Log::debug('Discount update request', [
             'id' => $id,
             'data' => $request->all(),
         ]);
-        $discount = Discount::find($id);
-        if (!$discount) {
+        $coupon = Coupon::find($id);
+        if (!$coupon) {
             return response()->json([
-                'message' => 'Discount not found',
+                'message' => 'Coupon not found',
             ], 404);
         }
-        $discount->update([
-            'name' => $request->input('name'),
-            'type' => $request->input('type'),
-            'value' => $request->input('value'),
-            'usage_limit' => $request->input('usage_limit'),
-            'trial_days' => $request->input('trial_days'),
-            'started_at' => $request->input('started_at'),
-            'expired_at' => $request->input('expired_at'),
-            'discount_month' => $request->input('discount_month'),
-        ]);
+        $data = array_filter([
+            'code' => $request->input('code'),
+            'shop' => $request->input('shop'),
+            'discount_id' => $request->input('discount_id'),
+        ], fn($value) => !is_null($value));
+
+        $coupon->update($data);
 
         return response()->json([
-            'message' => 'Discount updated successfully',
-            'discount' => $discount,
+            'message' => 'Coupon updated successfully',
+            'coupon' => $coupon,
         ], 200);
     }
 

@@ -98,7 +98,8 @@ class DiscountController extends Controller
                 'message' => 'Discount not found',
             ], 404);
         }
-        $discount->update([
+
+        $data = array_filter([
             'name' => $request->input('name'),
             'type' => $request->input('type'),
             'value' => $request->input('value'),
@@ -107,7 +108,8 @@ class DiscountController extends Controller
             'started_at' => $request->input('started_at'),
             'expired_at' => $request->input('expired_at'),
             'discount_month' => $request->input('discount_month'),
-        ]);
+        ], fn($value) => !is_null($value));
+        $discount->update($data);
 
         return response()->json([
             'message' => 'Discount updated successfully',
