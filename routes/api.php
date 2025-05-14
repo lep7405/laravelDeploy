@@ -9,7 +9,7 @@ Route::get('/discounts', [DiscountController::class, 'index'])->name('discounts.
 Route::get('/discount/{id}', [DiscountController::class, 'findDiscountById'])->name('discounts.findDiscountById');
 Route::put('/discount/{id}', [DiscountController::class, 'update'])->name('discounts.update');
 Route::delete('/discount/{id}', [DiscountController::class, 'destroy'])->name('discounts.destroy');
-
+Route::get('/discounts/total', [DiscountController::class, 'totalDiscounts'])->name('discounts.totalDiscounts');
 Route::get('/', function () {
     return view('welcome');
 });

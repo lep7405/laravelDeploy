@@ -10,25 +10,6 @@ use Illuminate\Support\Facades\Log;
 
 class DiscountController extends Controller
 {
-
-    // Nếu có cột discount_month thì mới thêm vào create
-    public function store(Request $request)
-    {
-        $discount = Discount::create([
-            'name' => $request->input('name'),
-            'type' => $request->input('type'),
-            'value' => $request->input('value'),
-            'usage_limit' => $request->input('usage_limit'),
-            'trial_days' => $request->input('trial_days'),
-            'start_date' => $request->input('start_date'),
-            'end_date' => $request->input('end_date'),
-            'discount_month' => $request->input('discount_month'),
-        ]);
-        return response()->json([
-            'message' => 'Discount created successfully',
-            'discount' => $discount,
-        ],201);
-    }
     public function index(Request $request){
         Log::debug('✅ Laravel Cloud log test');
         $perPage = Arr::get($request->all(), 'perPageDiscount');
@@ -81,35 +62,30 @@ class DiscountController extends Controller
             'pageDiscount',
             $pageDiscount
         );
-
         return response()->json([
             'message' => 'Discounts retrieved successfully',
             'discounts' => $result,
+            'total' => $total,
         ],200);
     }
-
-    public function findDiscountById(Request $request,$id){
-        $withCoupon= $request->input('withCoupon', false);
-        $discount = Discount::query()
-            ->when($withCoupon, function ($query) {
-                $query->with(['coupon' => function ($query) {
-                    $query->select('id', 'times_used', 'discount_id');
-                }]);
-            })
-            ->find($id);
-        if (!$discount) {
-            return response()->json([
-                'message' => 'Discount not found',
-            ], 404);
-        }
+    // Nếu có cột discount_month thì mới thêm vào create
+    public function store(Request $request)
+    {
+        $discount = Discount::create([
+            'name' => $request->input('name'),
+            'type' => $request->input('type'),
+            'value' => $request->input('value'),
+            'usage_limit' => $request->input('usage_limit'),
+            'trial_days' => $request->input('trial_days'),
+            'start_date' => $request->input('start_date'),
+            'end_date' => $request->input('end_date'),
+            'discount_month' => $request->input('discount_month'),
+        ]);
         return response()->json([
-            'message' => 'Discount retrieved successfully',
+            'message' => 'Discount created successfully',
             'discount' => $discount,
-        ], 200);
+        ],201);
     }
-
-
-
     // Nếu có cột discount_month thì mới thêm vào update
     public function update(Request $request, $id)
     {
@@ -153,4 +129,32 @@ class DiscountController extends Controller
             'message' => 'Discount deleted successfully',
         ], 200);
     }
+    public function findDiscountById(Request $request,$id){
+        $withCoupon= $request->input('withCoupon', false);
+        $discount = Discount::query()
+            ->when($withCoupon, function ($query) {
+                $query->with(['coupon' => function ($query) {
+                    $query->select('id', 'times_used', 'discount_id');
+                }]);
+            })
+            ->find($id);
+        if (!$discount) {
+            return response()->json([
+                'message' => 'Discount not found',
+            ], 404);
+        }
+        return response()->json([
+            'message' => 'Discount retrieved successfully',
+            'discount' => $discount,
+        ], 200);
+    }
+
+    public function totalDiscounts(){
+        $total = Discount::count();
+        return response()->json([
+            'message' => 'Total discounts retrieved successfully',
+            'total' => $total,
+        ], 200);
+    }
+
 }
