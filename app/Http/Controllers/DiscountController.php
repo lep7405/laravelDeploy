@@ -21,7 +21,7 @@ class DiscountController extends Controller
         return response()->json([
             'message' => 'Discount created successfully',
             'discount' => $discount,
-        ]);
+        ],201);
     }
     public function index(Request $request){
         Log::debug('✅ Laravel Cloud log test');
