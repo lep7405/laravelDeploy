@@ -90,7 +90,7 @@ class CouponController extends Controller
         }
         return response()->json([
             'message' => 'Coupon retrieved successfully',
-            'discount' => $coupon,
+            'coupon' => $coupon,
         ], 200);
     }
     public function findCouponByCode($code){
