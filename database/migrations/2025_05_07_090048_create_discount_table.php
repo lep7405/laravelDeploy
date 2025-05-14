@@ -11,20 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('discounts', function (Blueprint $table) {
-            $table->increments('id')->unsigned();
-            $table->string('name', 255);
-            $table->timestamp('started_at')->nullable();
-            $table->timestamp('expired_at')->nullable();
-            $table->enum('type', ["percentage", "amount"]);
-            $table->float('value')->unsigned()->nullable();
-            $table->integer('usage_limit')->unsigned()->nullable();
-            $table->integer('times_used')->unsigned()->default(0);
-            $table->integer('trial_days')->default(0);
-            $table->boolean('status')->default(true);
-            $table->integer('discount_month')->nullable();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('discounts')) {
+            Schema::create('discounts', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->timestamp('started_at')->nullable();
+                $table->timestamp('expired_at')->nullable();
+                $table->enum('type', ['percentage', 'amount']);
+                $table->float('value', 53)->unsigned()->nullable();
+                $table->unsignedInteger('usage_limit')->nullable();
+                $table->unsignedInteger('times_used')->default(0);
+                $table->integer('trial_days')->default(0);
+                $table->tinyInteger('status')->default(1);
+                $table->integer('discount_month')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     /**
