@@ -128,8 +128,8 @@ class DiscountController extends Controller
             'value' => $request->input('value'),
             'usage_limit' => $request->input('usage_limit'),
             'trial_days' => $request->input('trial_days'),
-            'start_date' => $request->input('start_date'),
-            'end_date' => $request->input('end_date'),
+            'start_at' => $request->input('start_at'),
+            'expired_at' => $request->input('expired_at'),
             'discount_month' => $request->input('discount_month'),
         ]);
 
