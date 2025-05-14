@@ -118,6 +118,10 @@ class DiscountController extends Controller
                 'message' => 'Discount not found',
             ], 404);
         }
+        Log::info('Discount update request', [
+            'id' => $id,
+            'data' => $request->all(),
+        ]);
 
         $discount->update([
             'name' => $request->input('name'),
