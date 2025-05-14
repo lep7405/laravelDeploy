@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CouponController;
 use App\Http\Controllers\DiscountController;
 use Illuminate\Support\Facades\Route;
 
@@ -10,6 +11,9 @@ Route::get('/discount/{id}', [DiscountController::class, 'findDiscountById'])->n
 Route::put('/discount/{id}', [DiscountController::class, 'update'])->name('discounts.update');
 Route::delete('/discount/{id}', [DiscountController::class, 'destroy'])->name('discounts.destroy');
 Route::get('/discounts/total', [DiscountController::class, 'totalDiscounts'])->name('discounts.totalDiscounts');
+
+Route::get('/coupons', [CouponController::class, 'index'])->name('coupons.index');
+
 Route::get('/', function () {
     return view('welcome');
 });
