@@ -112,17 +112,17 @@ class DiscountController extends Controller
     // Nếu có cột discount_month thì mới thêm vào update
     public function update(Request $request, $id)
     {
-
+        Log::debug('Discount update request', [
+            'id' => $id,
+            'data' => $request->all(),
+        ]);
         $discount = Discount::where('id', 9)->first();;
         if (!$discount) {
             return response()->json([
                 'message' => 'Discount not found',
             ], 404);
         }
-        Log::debug('Discount update request', [
-            'id' => $id,
-            'data' => $request->all(),
-        ]);
+
 
         $discount->update([
             'name' => $request->input('name'),
