@@ -65,7 +65,6 @@ class DiscountController extends Controller
         return response()->json([
             'message' => 'Discounts retrieved successfully',
             'discounts' => $result,
-            'total' => $total,
         ],200);
     }
     // Nếu có cột discount_month thì mới thêm vào create
