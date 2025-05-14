@@ -79,7 +79,7 @@ class CouponController extends Controller
         $coupon = Coupon::query()
             ->when($withDiscount, function ($query) {
                 $query->with(['discount' => function ($query) {
-                    $query->select('id', 'times_used', 'discount_id');
+                    $query->select('id', 'name');
                 }]);
             })
             ->find($id);
