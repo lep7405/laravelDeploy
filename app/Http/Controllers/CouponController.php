@@ -61,12 +61,20 @@ class CouponController extends Controller
     }
     public function store(Request $request){
         $data = $request->all();
+        $discountId=Arr::get($data, 'discount_id');
         $attributes=[
             'code' => Arr::get($data, 'code'),
             'shop' => Arr::get($data, 'shop'),
-            'discount_id' => Arr::get($data, 'discountId'),
+            'discount_id' => Arr::get($data, 'discount_id'),
             'automatic' => Arr::get($data, 'automatic',0),
         ];
+
+        $discount= Discount::find($discountId);
+        if (!$discount) {
+            return response()->json([
+                'message' => 'Discount not found',
+            ], 404);
+        }
         $coupon = Coupon::create($attributes);
         return response()->json([
             'message' => 'Coupon created successfully',
@@ -125,5 +133,62 @@ class CouponController extends Controller
             'coupon' => $coupon,
         ], 200);
     }
+
+    public function updateStatus($id){
+        $coupon = Coupon::find($id);
+        if (!$coupon) {
+            return response()->json([
+                'message' => 'Coupon not found',
+            ], 404);
+        }
+        $coupon->status = !$coupon->status;
+        $coupon->save();
+        return response()->json([
+            'message' => 'Coupon status updated successfully',
+            'coupon' => $coupon,
+        ], 200);
+    }
+
+    public function decrementTimesUsed(Request $request, $id)
+    {
+        $data = $request->all();
+        $numDecrement = Arr::get($data, 'numDecrement');
+        $coupon = Coupon::find($id);
+        if (!$coupon) {
+            return response()->json([
+                'message' => 'Coupon not found',
+            ], 404);
+        }
+        if ($coupon->times_used < $numDecrement) {
+            return response()->json([
+                'message' => 'Cannot decrement times used more than available',
+            ], 400);
+        }
+        $coupon->times_used -= $numDecrement;
+        $coupon->save();
+        return response()->json([
+            'message' => 'Coupon times used decremented successfully',
+            'coupon' => $coupon,
+        ], 200);
+    }
+
+    public function destroy($id){
+        $coupon = Coupon::find($id);
+        if (!$coupon) {
+            return response()->json([
+                'message' => 'Coupon not found',
+            ], 404);
+        }
+        if ($coupon->times_used && $coupon->times_used > 0) {
+            return response()->json([
+                'message' => 'Cannot delete coupon that has been used',
+            ], 400);
+        }
+        $coupon->delete();
+        return response()->json([
+            'message' => 'Coupon deleted successfully',
+        ], 200);
+    }
+
 
 }
