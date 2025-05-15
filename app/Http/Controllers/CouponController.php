@@ -50,7 +50,7 @@ class CouponController extends Controller
         $query = $query->orderBy('id', 'desc');
         $result = $query->paginate(
             $perPage,
-            ['id', 'code', 'shop', 'times_used', 'status', 'discount_id'],
+            ['id', 'code', 'shop', 'times_used', 'status', 'discount_id', 'created_at', 'updated_at'],
             'pageCoupon',
             $pageCoupon
         );
