@@ -135,6 +135,13 @@ class DiscountController extends Controller
             'discount' => $discount,
         ], 200);
     }
+    public function getAllDiscounts(){
+        $discounts = Discount::select('id', 'name')->get();
+        return response()->json([
+            'message' => 'All discounts retrieved successfully',
+            'discounts' => $discounts,
+        ], 200);
+    }
     public function totalDiscounts(){
         $total = Discount::count();
         return response()->json([
