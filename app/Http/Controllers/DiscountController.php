@@ -103,27 +103,38 @@ class DiscountController extends Controller
             'discount' => $discount,
         ], 200);
     }
-    public function findDiscountsByIds(Request $request){
-        $withCoupon= $request->input('withCoupon', false);
+    public function findDiscountsByIds(Request $request)
+    {
+        $withCoupon = $request->input('withCoupon', false);
         $ids = $request->input('ids');
+
+        // Kiểm tra nếu $ids không hợp lệ
+        if (empty($ids) || !is_array($ids)) {
+            return response()->json([
+                'message' => 'Invalid or missing discount IDs',
+            ], 400);
+        }
+
         $discount = Discount::query()
             ->when($withCoupon, function ($query) {
                 $query->with(['coupon' => function ($query) {
                     $query->select('id', 'times_used', 'discount_id');
                 }]);
             })
-            ->whereIn('id', $ids);
+            ->whereIn('id', $ids)
+            ->get(); // Thêm get() để lấy kết quả
+
         if ($discount->isEmpty() || $discount->count() != count($ids)) {
             return response()->json([
                 'message' => 'Discount not found',
             ], 404);
         }
+
         return response()->json([
             'message' => 'Discount retrieved successfully',
             'discount' => $discount,
         ], 200);
     }
-
     public function totalDiscounts(){
         $total = Discount::count();
         return response()->json([
