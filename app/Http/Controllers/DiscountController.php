@@ -57,12 +57,16 @@ class DiscountController extends Controller
         $query = $query->orderBy('id', 'desc');
         if ($perPage == -1) {
             $result = $query->get(['id','name','started_at','expired_at','type','value','usage_limit','trial_days']);
-            return [
+            $result = [
                 'discountData' => $result,
                 'totalPagesDiscount' => 1,
                 'totalItemsDiscount' => $result->count(),
                 'currentPagesDiscount' => 1,
             ];
+            return response()->json([
+                'message' => 'Discounts retrieved successfully',
+                'discounts' => $result,
+            ],200);
         }
 
         $result = $query->paginate(
