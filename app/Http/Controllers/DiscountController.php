@@ -23,16 +23,17 @@ class DiscountController extends Controller
     // Nếu có cột discount_month thì mới thêm vào create
     public function store(Request $request)
     {
-        $discount = Discount::create([
+        $data = array_filter([
             'name' => $request->input('name'),
             'type' => $request->input('type'),
             'value' => $request->input('value'),
             'usage_limit' => $request->input('usage_limit'),
             'trial_days' => $request->input('trial_days'),
-            'start_date' => $request->input('start_date'),
-            'end_date' => $request->input('end_date'),
+            'started_at' => $request->input('started_at'),
+            'expired_at' => $request->input('expired_at'),
             'discount_month' => $request->input('discount_month'),
-        ]);
+        ], fn($value) => !is_null($value));
+        $discount = Discount::create($data);
         return response()->json([
             'message' => 'Discount created successfully',
             'discount' => $discount,
