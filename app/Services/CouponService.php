@@ -65,4 +65,6 @@ class CouponService {
             'currentPagesCoupon' => $result->currentPage(),
         ];
     }
+
+
 }

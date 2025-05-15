@@ -13,6 +13,7 @@ Route::put('/discount/{id}', [DiscountController::class, 'update'])->name('disco
 Route::delete('/discount/{id}', [DiscountController::class, 'destroy'])->name('discounts.destroy');
 Route::get('/discounts/total', [DiscountController::class, 'totalDiscounts'])->name('discounts.totalDiscounts');
 Route::get('/discounts/id-and-name', [DiscountController::class, 'getIdAndName'])->name('discounts.idAndName');
+Route::get('/discounts/with-coupons', [DiscountController::class, 'getDiscountsWithCoupons'])->name('discounts.withCoupons');
 
 Route::get('/coupons', [CouponController::class, 'index'])->name('coupons.index');
 Route::post('/coupon/create',[CouponController::class, 'store'])->name('coupons.create');

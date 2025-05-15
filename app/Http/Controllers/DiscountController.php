@@ -119,4 +119,16 @@ class DiscountController extends Controller
         ], 200);
     }
 
+    public function getDiscountsWithCoupons(){
+        $discounts=Discount::query()->select('id')
+            ->with(['coupon' => function ($query) {
+                $query->select('id', 'times_used', 'discount_id');
+            }])
+            ->get();
+        return response()->json([
+            'message' => 'All discounts retrieved successfully',
+            'discounts' => $discounts,
+        ], 200);
+    }
+
 }
