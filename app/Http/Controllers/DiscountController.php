@@ -103,6 +103,26 @@ class DiscountController extends Controller
             'discount' => $discount,
         ], 200);
     }
+    public function findDiscountsByIds(Request $request){
+        $withCoupon= $request->input('withCoupon', false);
+        $ids = $request->input('ids');
+        $discount = Discount::query()
+            ->when($withCoupon, function ($query) {
+                $query->with(['coupon' => function ($query) {
+                    $query->select('id', 'times_used', 'discount_id');
+                }]);
+            })
+            ->whereIn('id', $ids);
+        if ($discount->isEmpty() || $discount->count() != count($ids)) {
+            return response()->json([
+                'message' => 'Discount not found',
+            ], 404);
+        }
+        return response()->json([
+            'message' => 'Discount retrieved successfully',
+            'discount' => $discount,
+        ], 200);
+    }
 
     public function totalDiscounts(){
         $total = Discount::count();
