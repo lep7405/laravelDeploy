@@ -33,7 +33,7 @@ class ReportController extends Controller
         $result = $this->discountService->index($data);
 
 
-        foreach ($result->discountData as $discount) {
+        foreach ($result['discountData'] as $discount) {
             $totalCoupon = 0;
             $totalCouponUsed = 0;
             foreach ($discount->coupon as $coupon) {
