@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Discount;
-use App\Service\DiscountService;
+use App\Services\DiscountService;
 use App\Services\CouponService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;

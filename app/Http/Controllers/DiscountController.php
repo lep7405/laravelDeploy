@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Coupon;
 use App\Models\Discount;
-use App\Service\DiscountService;
+use App\Services\DiscountService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 
 class DiscountController extends Controller
