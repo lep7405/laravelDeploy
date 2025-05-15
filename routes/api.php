@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\DiscountController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -22,6 +23,8 @@ Route::put('/coupon/{id}/status', [CouponController::class, 'updateStatus'])->na
 Route::put('/coupon/{id}/times-used', [CouponController::class, 'decrementTimesUsed'])->name('coupons.decrementTimesUsed');
 Route::delete('/coupon/{id}', [CouponController::class, 'destroy'])->name('coupons.destroy');
 
+
+Route::get('/reports',[ReportController::class, 'index'])->name('reports.index');
 Route::get('/', function () {
     return view('welcome');
 });
