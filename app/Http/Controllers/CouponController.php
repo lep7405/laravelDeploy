@@ -151,12 +151,22 @@ class CouponController extends Controller
     }
 
     public function findCouponByDiscountIdAndCode($id){
-        $coupons= Coupon::where('discount_id', $id)
+        $coupon= Coupon::where('discount_id', $id)
             ->where('code', 'like','GENAUTO'.'%')
             ->first();
         return response()->json([
             'message' => 'Coupons retrieved successfully',
-            'coupons' => $coupons,
+            'coupon' => $coupon,
+        ], 200);
+    }
+    public function findCouponByDiscountIdAndShop($id,$shop){
+        $coupon= Coupon::where('discount_id', $id)
+            ->where('shop', $shop)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        return response()->json([
+            'message' => 'Coupons retrieved successfully',
+            'coupon' => $coupon,
         ], 200);
     }
 
