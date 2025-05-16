@@ -12,6 +12,7 @@ Route::get('/discount/{id}', [DiscountController::class, 'findDiscountById'])->n
 Route::post('/discounts/find-by-ids', [DiscountController::class, 'findDiscountsByIds'])->name('discounts.findDiscountsByIds');
 Route::get('/discounts/all', [DiscountController::class, 'getAllDiscounts'])->name('discounts.index');
 
+
 Route::put('/discount/{id}', [DiscountController::class, 'update'])->name('discounts.update');
 Route::delete('/discount/{id}', [DiscountController::class, 'destroy'])->name('discounts.destroy');
 Route::get('/discounts/total', [DiscountController::class, 'totalDiscounts'])->name('discounts.totalDiscounts');
@@ -26,7 +27,7 @@ Route::put('/coupon/{id}', [CouponController::class, 'update'])->name('coupons.u
 Route::put('/coupon/{id}/status', [CouponController::class, 'updateStatus'])->name('coupons.updateStatus');
 Route::put('/coupon/{id}/times-used', [CouponController::class, 'decrementTimesUsed'])->name('coupons.decrementTimesUsed');
 Route::delete('/coupon/{id}', [CouponController::class, 'destroy'])->name('coupons.destroy');
-
+Route::get('/coupons/discount/{id}', [CouponController::class, 'findCouponByDiscountIdAndCode'])->name('coupons.findCouponByDiscountIdAndCode');
 
 Route::get('/reports',[ReportController::class, 'index'])->name('reports.index');
 Route::get('/', function () {

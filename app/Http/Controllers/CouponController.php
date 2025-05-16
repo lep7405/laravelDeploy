@@ -150,5 +150,14 @@ class CouponController extends Controller
         ], 200);
     }
 
+    public function findCouponByDiscountIdAndCode($id){
+        $coupons= Coupon::where('discount_id', $id)
+            ->where('code', 'like','GENAUTO'.'%')
+            ->get();
+        return response()->json([
+            'message' => 'Coupons retrieved successfully',
+            'coupons' => $coupons,
+        ], 200);
+    }
 
 }
