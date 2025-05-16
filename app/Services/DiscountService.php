@@ -36,13 +36,17 @@ class DiscountService
 
                 $sub->orWhere(function ($q) use ($search) {
                     $q->where(function ($inner) use ($search) {
-                        $inner->where('type', 'percentage')
-                            ->where('value', str_replace('%', '', $search));
-                    })
-                        ->orWhere(function ($inner) use ($search) {
+                        if (is_numeric(str_replace('%', '', $search))) {
+                            $inner->where('type', 'percentage')
+                                ->where('value', str_replace('%', '', $search));
+                        };
+                    });
+                    if (is_numeric($search)) {
+                        $q->orWhere(function ($inner) use ($search) {
                             $inner->where('type', 'amount')
                                 ->where('value', $search);
                         });
+                    };
                 });
             });
         }
