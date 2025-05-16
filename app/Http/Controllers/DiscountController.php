@@ -6,6 +6,7 @@ use App\Models\Coupon;
 use App\Models\Discount;
 use App\Services\DiscountService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 
 class DiscountController extends Controller
@@ -161,5 +162,37 @@ class DiscountController extends Controller
             'discounts' => $discounts,
         ], 200);
     }
+    public function UpdateOrCreateDiscountInAffiliatePartner(Request $request){
+        $attributes = array_filter([
+            'name' => $request->input('name'),
+            'type' => $request->input('type'),
+            'value' => $request->input('value'),
+            'trial_days' => $request->input('trial_days'),
+        ], fn($value) => !is_null($value));
 
-}
+        $exists = Discount::where([
+            'name' => Arr::get($attributes, 'name'),
+            'type' => 'percentage',
+            'value' => Arr::get($attributes, 'value'),
+            'trial_days' => Arr::get($attributes, 'trial_days'),
+        ])->exists();
+
+        $discount = Discount::updateOrCreate(
+            [
+                'name' => Arr::get($attributes, 'name'),
+                'type' => 'percentage',
+                'value' => Arr::get($attributes, 'value'),
+                'trial_days' => Arr::get($attributes, 'trial_days'),
+            ],
+            [
+                'usage_limit' => 1,
+            ]
+        );
+
+        $statusCode = $exists ? 200 : 201;
+
+        return response()->json([
+            'message' => $exists ? 'Discount updated successfully' : 'Discount created successfully',
+            'discount' => $discount,
+        ], $statusCode);
+    }}

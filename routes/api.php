@@ -13,7 +13,7 @@ Route::post('/discounts/find-by-ids', [DiscountController::class, 'findDiscounts
 
 //Route::get('/discounts/all', [DiscountController::class, 'getAllDiscounts'])->name('discounts.index');
 Route::get('/discounts/id-and-name', [DiscountController::class, 'getIdAndName'])->name('discounts.idAndName');
-
+Route::post('/discount/affiliate-partners',[DiscountController::class, 'UpdateOrCreateDiscountInAffiliatePartner'])->name('discounts.UpdateOrCreateDiscountInAffiliatePartner');
 
 Route::put('/discount/{id}', [DiscountController::class, 'update'])->name('discounts.update');
 Route::delete('/discount/{id}', [DiscountController::class, 'destroy'])->name('discounts.destroy');
