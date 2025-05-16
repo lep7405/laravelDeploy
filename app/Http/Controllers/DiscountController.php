@@ -115,7 +115,7 @@ class DiscountController extends Controller
             ], 400);
         }
 
-        $discount = Discount::query()
+        $discounts = Discount::query()
             ->when($withCoupon, function ($query) {
                 $query->with(['coupon' => function ($query) {
                     $query->select('id', 'times_used', 'discount_id');
@@ -124,7 +124,7 @@ class DiscountController extends Controller
             ->whereIn('id', $ids)
             ->get(); // Thêm get() để lấy kết quả
 
-        if ($discount->isEmpty() || $discount->count() != count($ids)) {
+        if ($discounts->isEmpty() || $discounts->count() != count($ids)) {
             return response()->json([
                 'message' => 'Discount not found',
             ], 404);
@@ -132,7 +132,7 @@ class DiscountController extends Controller
 
         return response()->json([
             'message' => 'Discount retrieved successfully',
-            'discount' => $discount,
+            'discounts' => $discounts,
         ], 200);
     }
     public function getAllDiscounts(){
