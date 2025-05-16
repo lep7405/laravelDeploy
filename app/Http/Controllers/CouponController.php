@@ -27,6 +27,7 @@ class CouponController extends Controller
             'shop' => Arr::get($data, 'shop'),
             'discount_id' => Arr::get($data, 'discount_id'),
             'automatic' => Arr::get($data, 'automatic',0),
+            'times_used' => Arr::get($data, 'times_used'),
         ];
 
         $discount= Discount::find($discountId);
