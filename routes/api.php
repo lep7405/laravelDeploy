@@ -27,7 +27,7 @@ Route::put('/coupon/{id}', [CouponController::class, 'update'])->name('coupons.u
 Route::put('/coupon/{id}/status', [CouponController::class, 'updateStatus'])->name('coupons.updateStatus');
 Route::put('/coupon/{id}/times-used', [CouponController::class, 'decrementTimesUsed'])->name('coupons.decrementTimesUsed');
 Route::delete('/coupon/{id}', [CouponController::class, 'destroy'])->name('coupons.destroy');
-Route::get('/coupons/discount/{id}', [CouponController::class, 'findCouponByDiscountIdAndCode'])->name('coupons.findCouponByDiscountIdAndCode');
+Route::get('/coupon/discount/{id}', [CouponController::class, 'findCouponByDiscountIdAndCode'])->name('coupons.findCouponByDiscountIdAndCode');
 
 Route::get('/reports',[ReportController::class, 'index'])->name('reports.index');
 Route::get('/', function () {
