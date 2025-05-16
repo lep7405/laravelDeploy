@@ -5,7 +5,7 @@ use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
-
+Route::get('/discounts/with-coupons', [DiscountController::class, 'getDiscountsWithCoupons'])->name('discounts.withCoupons');
 Route::post('/discounts',[DiscountController::class, 'store'])->name('discount.create');
 Route::get('/discounts', [DiscountController::class, 'index'])->name('discounts.index');
 Route::get('/discounts/{id}', [DiscountController::class, 'findDiscountById'])->name('discounts.findDiscountById');
@@ -17,7 +17,6 @@ Route::post('/discounts/affiliate-partners',[DiscountController::class, 'UpdateO
 
 Route::put('/discounts/{id}', [DiscountController::class, 'update'])->name('discounts.update');
 Route::delete('/discounts/{id}', [DiscountController::class, 'destroy'])->name('discounts.destroy');
-Route::get('/discounts/with-coupons', [DiscountController::class, 'getDiscountsWithCoupons'])->name('discounts.withCoupons');
 
 Route::get('/coupons', [CouponController::class, 'index'])->name('coupons.index');
 Route::post('/coupons',[CouponController::class, 'store'])->name('coupons.create');
