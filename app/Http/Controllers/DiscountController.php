@@ -152,6 +152,7 @@ class DiscountController extends Controller
     }
 
     public function getDiscountsWithCoupons(){
+        Log::debug('Get all discounts with coupons');
         $discounts = Discount::query()->select('id')
             ->with(['coupon' => function ($query) {
                 $query->select('id', 'times_used', 'discount_id');
