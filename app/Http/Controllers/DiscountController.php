@@ -152,13 +152,17 @@ class DiscountController extends Controller
     }
 
     public function getDiscountsWithCoupons(){
-        $discounts=Discount::query()->select('id')
+        $discounts = Discount::query()->select('id')
             ->with(['coupon' => function ($query) {
                 $query->select('id', 'times_used', 'discount_id');
             }])
             ->get();
+
+        // Luôn trả về 200, ngay cả khi không có dữ liệu
         return response()->json([
-            'message' => 'All discounts retrieved successfully',
+            'message' => $discounts->isEmpty()
+                ? 'No discounts found'
+                : 'All discounts retrieved successfully',
             'discounts' => $discounts,
         ], 200);
     }
