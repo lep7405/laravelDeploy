@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateDiscountRequest;
 use App\Models\Coupon;
 use App\Models\Discount;
 use App\Services\DiscountService;
@@ -21,19 +22,9 @@ class DiscountController extends Controller
             'discounts' => $result,
         ],200);
     }
-    // Nếu có cột discount_month thì mới thêm vào create
-    public function store(Request $request)
+    public function store(CreateDiscountRequest $request)
     {
-        $data = array_filter([
-            'name' => $request->input('name'),
-            'type' => $request->input('type'),
-            'value' => $request->input('value'),
-            'usage_limit' => $request->input('usage_limit'),
-            'trial_days' => $request->input('trial_days'),
-            'started_at' => $request->input('started_at'),
-            'expired_at' => $request->input('expired_at'),
-            'discount_month' => $request->input('discount_month'),
-        ], fn($value) => !is_null($value));
+        $data = $request->validated();
         $discount = Discount::create($data);
         return response()->json([
             'message' => 'Discount created successfully',
@@ -43,10 +34,6 @@ class DiscountController extends Controller
     // Nếu có cột discount_month thì mới thêm vào update
     public function update(Request $request, $id)
     {
-        Log::debug('Discount update request', [
-            'id' => $id,
-            'data' => $request->all(),
-        ]);
         $discount = Discount::find($id);
         if (!$discount) {
             return response()->json([
@@ -54,16 +41,10 @@ class DiscountController extends Controller
             ], 404);
         }
 
-        $data = array_filter([
-            'name' => $request->input('name'),
-            'type' => $request->input('type'),
-            'value' => $request->input('value'),
-            'usage_limit' => $request->input('usage_limit'),
-            'trial_days' => $request->input('trial_days'),
-            'started_at' => $request->input('started_at'),
-            'expired_at' => $request->input('expired_at'),
-            'discount_month' => $request->input('discount_month'),
-        ], fn($value) => !is_null($value));
+        $data = $request->only([
+            'name', 'type', 'value', 'usage_limit', 'trial_days',
+            'started_at', 'expired_at', 'discount_month'
+        ]);
         $discount->update($data);
 
         return response()->json([
@@ -136,13 +117,7 @@ class DiscountController extends Controller
             'discounts' => $discounts,
         ], 200);
     }
-//    public function getAllDiscounts(){
-//        $discounts = Discount::select('id', 'name')->get();
-//        return response()->json([
-//            'message' => 'All discounts retrieved successfully',
-//            'discounts' => $discounts,
-//        ], 200);
-//    }
+
     public function getIdAndName(){
         $discounts = Discount::all(['id', 'name']);
         return response()->json([
@@ -159,21 +134,15 @@ class DiscountController extends Controller
             }])
             ->get();
 
-        // Luôn trả về 200, ngay cả khi không có dữ liệu
         return response()->json([
-            'message' => $discounts->isEmpty()
-                ? 'No discounts found'
-                : 'All discounts retrieved successfully',
+            'message' => 'All discounts retrieved successfully',
             'discounts' => $discounts,
         ], 200);
     }
     public function UpdateOrCreateDiscountInAffiliatePartner(Request $request){
-        $attributes = array_filter([
-            'name' => $request->input('name'),
-            'type' => $request->input('type'),
-            'value' => $request->input('value'),
-            'trial_days' => $request->input('trial_days'),
-        ], fn($value) => !is_null($value));
+        $attributes = $request->only([
+            'name', 'type', 'value', 'trial_days',
+        ]);
 
         $exists = Discount::where([
             'name' => Arr::get($attributes, 'name'),

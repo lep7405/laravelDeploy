@@ -22,13 +22,10 @@ class CouponController extends Controller
     public function store(Request $request){
         $data = $request->all();
         $discountId=Arr::get($data, 'discount_id');
-        $attributes=[
-            'code' => Arr::get($data, 'code'),
-            'shop' => Arr::get($data, 'shop'),
-            'discount_id' => Arr::get($data, 'discount_id'),
-            'automatic' => Arr::get($data, 'automatic',0),
-            'times_used' => Arr::get($data, 'times_used'),
-        ];
+
+        $attributes = $request->only([
+            'code', 'shop', 'discount_id' ,'automatic', 'times_used'
+        ]);
 
         $discount= Discount::find($discountId);
         if (!$discount) {
@@ -71,22 +68,15 @@ class CouponController extends Controller
     }
     public function update(Request $request, $id)
     {
-        Log::debug('Discount update request', [
-            'id' => $id,
-            'data' => $request->all(),
-        ]);
         $coupon = Coupon::find($id);
         if (!$coupon) {
             return response()->json([
                 'message' => 'Coupon not found',
             ], 404);
         }
-        $data = array_filter([
-            'code' => $request->input('code'),
-            'shop' => $request->input('shop'),
-            'discount_id' => $request->input('discount_id'),
-        ], fn($value) => !is_null($value));
-
+        $data = $request->only([
+            'code', 'shop', 'discount_id'
+        ]);
         $coupon->update($data);
 
         return response()->json([
