@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Request;
 
+use App\Exceptions\DiscountException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CreateDiscountRequest extends FormRequest
 {
@@ -12,9 +12,11 @@ class CreateDiscountRequest extends FormRequest
     {
         return true;
     }
+
+
     public function validationData(): array
     {
-        return [
+        $validationData = [
             'name' => $this->input('name'),
             'type' => $this->input('type'),
             'started_at' => $this->input('started_at'),
@@ -24,20 +26,24 @@ class CreateDiscountRequest extends FormRequest
             'trial_days' => $this->input('trial_days'),
             'discount_month' => $this->input('discount_month'),
         ];
+
+        return $validationData;
     }
 
-    // Nếu có cột discount_month thì mới thêm vào create
     public function rules(): array
     {
-        return [
+        $rules = [
             'name' => 'required|max:255|string',
             'expired_at' => 'nullable|date|after_or_equal:started_at',
             'type' => 'required|in:percentage,amount',
             'value' => $this->percentageValidationRule(),
-            'usage_limit' => 'nullable|integer',
+            'usage_limit' => 'nullable|integer|min:0',
             'trial_days' => 'nullable|integer|min:0',
             'discount_month' => 'nullable|numeric|min:0',
         ];
+
+
+        return $rules;
     }
 
     public function failedValidation(Validator $validator)
@@ -50,10 +56,7 @@ class CreateDiscountRequest extends FormRequest
                 $errorDetails[$field][] = $message;
             }
         }
-        throw new HttpResponseException(response()->json([
-            'message' => 'Validation failed',
-            'errors' => $errorDetails,
-        ], 422));
+        throw DiscountException::validateCreate($errorDetails);
     }
 
     protected function percentageValidationRule()

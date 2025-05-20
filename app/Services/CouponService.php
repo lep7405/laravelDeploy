@@ -59,10 +59,10 @@ class CouponService {
             $pageCoupon
         );
         return [
-            'couponData' => $result->items(),
-            'totalPagesCoupon' => $result->lastPage(),
-            'totalItemsCoupon' => $result->total(),
-            'currentPagesCoupon' => $result->currentPage(),
+            'coupons' => $result->items(),
+            'totalPages' => $result->lastPage(),
+            'totalItems' => $result->total(),
+            'currentPage' => $result->currentPage(),
         ];
     }
 

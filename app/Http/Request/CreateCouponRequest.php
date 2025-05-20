@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Request;
 
+use App\Exceptions\CouponException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Contracts\Validation\Validator;
@@ -16,17 +17,10 @@ class CreateCouponRequest extends FormRequest
 
     public function rules(): array
     {
-        $databaseName = explode('/', $this->route()->getPrefix())[1];
-        if(in_array($this->databaseName, config('constant.DB_CALL_API'))){
-            return [
-                'code' => "required|string|max:128",
-                'discountId' => "required|integer|min:1",
-                'shop' => $this->shopRules(),
-            ];
-        }
+
         return [
-            'code' => "required|string|max:128|unique:{$databaseName}.coupons,code",
-            'discountId' => "required|integer|min:1|exists:{$databaseName}.discounts,id",
+            'code' => "required|string|max:128|unique:coupons,code",
+            'discountId' => "required|integer|min:1|exists:discounts,id",
             'shop' => $this->shopRules(),
         ];
     }
@@ -97,5 +91,18 @@ class CreateCouponRequest extends FormRequest
                 $fail("Could not verify the shop '$shopDomain'");
             }
         };
+    }
+
+    public function failedValidation(Validator $validator)
+    {
+        $errors = $validator->errors();
+        $errorDetails = [];
+
+        foreach ($errors->messages() as $field => $messages) {
+            foreach ($messages as $message) {
+                $errorDetails[$field][] = $message;
+            }
+        }
+        throw CouponException::validateCreate($errorDetails);
     }
 }

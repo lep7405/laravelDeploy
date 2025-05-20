@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateDiscountRequest;
 use App\Models\Coupon;
 use App\Models\Discount;
 use App\Services\DiscountService;
@@ -19,18 +18,24 @@ class DiscountController extends Controller
         $result = $this->discountService->index($request->query());
         return response()->json([
             'message' => 'Discounts retrieved successfully',
-            'discounts' => $result,
+            'data' => $result,
         ],200);
     }
-    public function store(CreateDiscountRequest $request)
+    // Nếu có cột discount_month thì mới thêm vào store
+    public function store(Request $request)
     {
-        $data = $request->validated();
+        $data = $request->only([
+            'name', 'type', 'value', 'usage_limit', 'trial_days',
+            'started_at', 'expired_at', 'discount_month'
+        ]);
         $discount = Discount::create($data);
         return response()->json([
             'message' => 'Discount created successfully',
             'discount' => $discount,
         ],201);
+
     }
+
     // Nếu có cột discount_month thì mới thêm vào update
     public function update(Request $request, $id)
     {
@@ -87,10 +92,8 @@ class DiscountController extends Controller
     }
     public function findDiscountsByIds(Request $request)
     {
-        $withCoupon = $request->input('withCoupon', false);
         $ids = $request->input('ids');
 
-        // Kiểm tra nếu $ids không hợp lệ
         if (empty($ids) || !is_array($ids)) {
             return response()->json([
                 'message' => 'Invalid or missing discount IDs',
@@ -98,13 +101,8 @@ class DiscountController extends Controller
         }
 
         $discounts = Discount::query()
-            ->when($withCoupon, function ($query) {
-                $query->with(['coupon' => function ($query) {
-                    $query->select('id', 'times_used', 'discount_id');
-                }]);
-            })
             ->whereIn('id', $ids)
-            ->get(); // Thêm get() để lấy kết quả
+            ->get();
 
         if ($discounts->isEmpty() || $discounts->count() != count($ids)) {
             return response()->json([

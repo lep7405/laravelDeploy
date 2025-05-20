@@ -16,7 +16,7 @@ class CouponController extends Controller
         $result=$couponService->index($data);
         return response()->json([
             'message' => 'Coupons retrieved successfully',
-            'coupons' => $result,
+            'data' => $result,
         ], 200);
     }
     public function store(Request $request){
@@ -32,6 +32,16 @@ class CouponController extends Controller
             return response()->json([
                 'message' => 'Discount not found',
             ], 404);
+        }
+        $coupon = Coupon::where('code', $attributes['code'])
+            ->first();
+        if ($coupon) {
+            return response()->json([
+                'message' => 'Coupon created failed',
+                'errors' => [
+                    'code' => 'Coupon code already exists',
+                ],
+            ], 422);
         }
         $coupon = Coupon::create($attributes);
         return response()->json([
@@ -74,6 +84,17 @@ class CouponController extends Controller
                 'message' => 'Coupon not found',
             ], 404);
         }
+        $couponCheck = Coupon::where('code', $request->input('code'))
+            ->first();
+        if ($couponCheck && $couponCheck->id != $id) {
+            return response()->json([
+                'message' => 'Coupon code already exists',
+                'errors' => [
+                    'code' => 'Coupon code already exists',
+                ],
+            ], 422);
+        }
+
         $data = $request->only([
             'code', 'shop', 'discount_id'
         ]);

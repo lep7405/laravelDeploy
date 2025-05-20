@@ -74,11 +74,10 @@ class DiscountService
         );
 
         return [
-            'discountData' => $result->items(),
-            'totalPagesDiscount' => $result->lastPage(),
-            'totalItemsDiscount' => $result->total(),
-            'currentPagesDiscount' => $result->currentPage(),
+            'discounts' => $result->items(),
+            'totalPages' => $result->lastPage(),
+            'totalItems' => $result->total(),
+            'currentPage' => $result->currentPage(),
         ];
     }
-
 }
