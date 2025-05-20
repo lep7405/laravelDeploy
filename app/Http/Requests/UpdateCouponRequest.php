@@ -1,36 +1,36 @@
 <?php
 
-namespace App\Http\Request;
+namespace App\Http\Requests;
 
-use App\Exceptions\CouponException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 
-class CreateCouponRequest extends FormRequest
+class UpdateCouponRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
     public function authorize(): bool
     {
         return true;
     }
 
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
     public function rules(): array
     {
 
         return [
-            'code' => "required|string|max:128|unique:coupons,code",
-            'discountId' => "required|integer|min:1|exists:discounts,id",
+            'code' => 'required|string|max:255',
+            'discount_id' => "required|integer|min:1|exists:.discounts,id",
             'shop' => $this->shopRules(),
-        ];
-    }
-
-    public function validationData(): array
-    {
-        return [
-            'code' => $this->input('code'),
-            'discountId' => $this->input('discountId'),
-            'shop' => $this->input('shop'),
         ];
     }
     protected function shopRules()
@@ -93,6 +93,15 @@ class CreateCouponRequest extends FormRequest
         };
     }
 
+    public function validationData(): array
+    {
+        return [
+            'code' => $this->input('code'),
+            'discount_id' => $this->input('discount_id'),
+            'shop' => $this->input('shop'),
+        ];
+    }
+
     public function failedValidation(Validator $validator)
     {
         $errors = $validator->errors();
@@ -103,6 +112,11 @@ class CreateCouponRequest extends FormRequest
                 $errorDetails[$field][] = $message;
             }
         }
-        throw CouponException::validateCreate($errorDetails);
+        $response = new JsonResponse([
+            'message' => 'Validation failed',
+            'errors' => $errorDetails,
+        ], 422);
+
+        throw new ValidationException($validator, $response);
     }
 }

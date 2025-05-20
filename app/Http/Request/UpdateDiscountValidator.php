@@ -113,7 +113,6 @@ class UpdateDiscountValidator
                 $errorDetails[$field][] = $message;
             }
         }
-
         throw DiscountException::validateUpdate($errorDetails);
     }
 }

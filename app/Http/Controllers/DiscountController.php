@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateDiscountRequest;
+use App\Http\Requests\UpdateDiscountRequest;
 use App\Models\Coupon;
 use App\Models\Discount;
 use App\Services\DiscountService;
@@ -22,12 +24,9 @@ class DiscountController extends Controller
         ],200);
     }
     // Nếu có cột discount_month thì mới thêm vào store
-    public function store(Request $request)
+    public function store(CreateDiscountRequest $request)
     {
-        $data = $request->only([
-            'name', 'type', 'value', 'usage_limit', 'trial_days',
-            'started_at', 'expired_at', 'discount_month'
-        ]);
+        $data = $request->validated();
         $discount = Discount::create($data);
         return response()->json([
             'message' => 'Discount created successfully',
@@ -37,20 +36,10 @@ class DiscountController extends Controller
     }
 
     // Nếu có cột discount_month thì mới thêm vào update
-    public function update(Request $request, $id)
+    public function update(UpdateDiscountRequest $request, $id)
     {
-        $discount = Discount::find($id);
-        if (!$discount) {
-            return response()->json([
-                'message' => 'Discount not found',
-            ], 404);
-        }
-
-        $data = $request->only([
-            'name', 'type', 'value', 'usage_limit', 'trial_days',
-            'started_at', 'expired_at', 'discount_month'
-        ]);
-        $discount->update($data);
+        $data = $request->validated();
+        $discount = Discount::find($id)->update($data);
 
         return response()->json([
             'message' => 'Discount updated successfully',

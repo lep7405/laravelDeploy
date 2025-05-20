@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Request;
+namespace App\Http\Requests;
 
-use App\Exceptions\DiscountException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 
 class CreateDiscountRequest extends FormRequest
 {
@@ -56,7 +57,12 @@ class CreateDiscountRequest extends FormRequest
                 $errorDetails[$field][] = $message;
             }
         }
-        throw DiscountException::validateCreate($errorDetails);
+        $response = new JsonResponse([
+            'message' => 'Validation failed',
+            'errors' => $errorDetails,
+        ], 422);
+
+        throw new ValidationException($validator, $response);
     }
 
     protected function percentageValidationRule()

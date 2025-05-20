@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateCouponRequest;
+use App\Http\Requests\UpdateCouponRequest;
 use App\Models\Coupon;
 use App\Models\Discount;
 use App\Services\CouponService;
@@ -19,31 +21,9 @@ class CouponController extends Controller
             'data' => $result,
         ], 200);
     }
-    public function store(Request $request){
-        $data = $request->all();
-        $discountId=Arr::get($data, 'discount_id');
-
-        $attributes = $request->only([
-            'code', 'shop', 'discount_id' ,'automatic', 'times_used'
-        ]);
-
-        $discount= Discount::find($discountId);
-        if (!$discount) {
-            return response()->json([
-                'message' => 'Discount not found',
-            ], 404);
-        }
-        $coupon = Coupon::where('code', $attributes['code'])
-            ->first();
-        if ($coupon) {
-            return response()->json([
-                'message' => 'Coupon created failed',
-                'errors' => [
-                    'code' => 'Coupon code already exists',
-                ],
-            ], 422);
-        }
-        $coupon = Coupon::create($attributes);
+    public function store(CreateCouponRequest $request){
+        $data = $request->validated();
+        $coupon = Coupon::create($data);
         return response()->json([
             'message' => 'Coupon created successfully',
             'coupon' => $coupon,
@@ -76,7 +56,7 @@ class CouponController extends Controller
             'coupon' => $coupon,
         ], 200);
     }
-    public function update(Request $request, $id)
+    public function update(UpdateCouponRequest $request, $id)
     {
         $coupon = Coupon::find($id);
         if (!$coupon) {
@@ -95,9 +75,7 @@ class CouponController extends Controller
             ], 422);
         }
 
-        $data = $request->only([
-            'code', 'shop', 'discount_id'
-        ]);
+        $data = $request->validated();
         $coupon->update($data);
 
         return response()->json([
