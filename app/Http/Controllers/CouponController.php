@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateCouponRequest;
+use App\Http\Requests\DecrementTimesUsedRequest;
 use App\Http\Requests\UpdateCouponRequest;
 use App\Models\Coupon;
 use App\Models\Discount;
@@ -99,9 +100,9 @@ class CouponController extends Controller
         ], 200);
     }
 
-    public function decrementTimesUsed(Request $request, $id)
+    public function decrementTimesUsed(DecrementTimesUsedRequest $request, $id)
     {
-        $data = $request->all();
+        $data = $request->validated();
         $numDecrement = Arr::get($data, 'numDecrement');
         $coupon = Coupon::find($id);
         if (!$coupon) {
