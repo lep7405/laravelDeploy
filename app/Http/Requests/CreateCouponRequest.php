@@ -7,6 +7,7 @@ use GuzzleHttp\Exception\RequestException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class CreateCouponRequest extends FormRequest
@@ -28,6 +29,12 @@ class CreateCouponRequest extends FormRequest
 
     public function validationData(): array
     {
+
+        Log::debug('Validation data:', [
+            'code' => $this->input('code'),
+            'discountId' => $this->input('discountId'),
+            'shop' => $this->input('shop'),
+        ]);
         return [
             'code' => $this->input('code'),
             'discountId' => $this->input('discountId'),
