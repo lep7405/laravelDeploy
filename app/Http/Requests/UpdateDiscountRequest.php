@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Discount;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
@@ -28,8 +29,7 @@ class UpdateDiscountRequest extends FormRequest
     private function hasUsedCoupons(): bool
     {
         if ($this->hasUsedCoupons === null) {
-            $discountRepo = app()->make('App\Repositories\Discount\DiscountRepository');
-            $discount = $discountRepo->find($this->route('id'));
+            $discount = Discount::with('coupon')->find($this->route('id'));
 
             $this->hasUsedCoupons = $discount->coupon->contains(function ($item) {
                 return $item->times_used > 0;
