@@ -6,6 +6,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
@@ -114,6 +115,6 @@ class CreateCouponRequest extends FormRequest
             'errors' => $errorDetails,
         ], 422);
 
-        throw new ValidationException($validator, $response);
+        throw new HttpResponseException($response);
     }
 }
