@@ -19,7 +19,11 @@ class CreateCouponRequest extends FormRequest
 
     public function rules(): array
     {
-
+        Log::debug('Validation data:', [
+            'code' => $this->input('code'),
+            'discountId' => $this->input('discountId'),
+            'shop' => $this->input('shop'),
+        ]);
         return [
             'code' => "required|string|max:128|unique:coupons,code",
             'discountId' => "required|integer|min:1|exists:discounts,id",
@@ -30,11 +34,7 @@ class CreateCouponRequest extends FormRequest
     public function validationData(): array
     {
 
-        Log::debug('Validation data:', [
-            'code' => $this->input('code'),
-            'discountId' => $this->input('discountId'),
-            'shop' => $this->input('shop'),
-        ]);
+
         return [
             'code' => $this->input('code'),
             'discountId' => $this->input('discountId'),
