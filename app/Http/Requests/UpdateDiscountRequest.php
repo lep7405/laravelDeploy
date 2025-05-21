@@ -48,12 +48,13 @@ class UpdateDiscountRequest extends FormRequest
             'name' => 'required|string|max:255',
             'started_at' => 'nullable|date',
             'expired_at' => 'nullable|date|after_or_equal:started_at',
+            'usage_limit' => 'nullable|integer|min:0',
         ];
 
         if (!$this->hasUsedCoupons()) {
             return array_merge($baseRules, [
-                'value' => 'required|numeric|min:0',
-                'usage_limit' => 'nullable|integer|min:0',
+                'type' => 'required|in:percentage,amount',
+                'value' => 'nullable|numeric|min:0',
                 'trial_days' => 'nullable|integer|min:0',
                 'discount_month' => 'nullable|integer|min:0',
             ]);
@@ -67,11 +68,11 @@ class UpdateDiscountRequest extends FormRequest
      */
     public function validationData()
     {
-        $fields = ['name', 'started_at', 'expired_at'];
+        $fields = ['name', 'started_at', 'expired_at','usage_limit'];
 
         if (!$this->hasUsedCoupons()) {
             $fields = array_merge($fields, [
-                'value', 'usage_limit', 'trial_days', 'discount_month'
+                'type','value', 'trial_days', 'discount_month'
             ]);
         }
 

@@ -38,7 +38,9 @@ class DiscountController extends Controller
     // Nếu có cột discount_month thì mới thêm vào update
     public function update(UpdateDiscountRequest $request, $id)
     {
+
         $data = $request->validated();
+        Log::debug('Update discount with data: ', $data);
         $discount = Discount::find($id)->update($data);
 
         return response()->json([
