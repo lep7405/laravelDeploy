@@ -33,8 +33,6 @@ class CreateCouponRequest extends FormRequest
 
     public function validationData(): array
     {
-
-
         return [
             'code' => $this->input('code'),
             'discountId' => $this->input('discountId'),
