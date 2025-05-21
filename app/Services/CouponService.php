@@ -7,7 +7,7 @@ use Illuminate\Support\Arr;
 
 class CouponService {
     public function index($filters){
-        $perPage = Arr::get($filters, 'perPageCoupon');
+        $perPage = Arr::get($filters, 'perPageCoupon',5);
         $pageCoupon = Arr::get($filters, 'pageCoupon', 1);
         $search = Arr::get($filters, 'searchCoupon');
         $status = Arr::get($filters, 'status');
@@ -46,10 +46,10 @@ class CouponService {
         if ($perPage == -1) {
             $result = $query->get(['id', 'code', 'shop', 'times_used', 'status', 'discount_id', 'created_at', 'updated_at']);
             return [
-                'couponData' => $result,
-                'totalPagesCoupon' => 1,
-                'totalItemsCoupon' => $result->count(),
-                'currentPagesCoupon' => 1,
+                'coupons' => $result,
+                'totalPages' => 1,
+                'totalItems' => $result->count(),
+                'currentPage' => 1,
             ];
         }
         $result = $query->paginate(

@@ -5,8 +5,6 @@ namespace App\Http\Requests;
 use App\Models\Discount;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Validation\ValidationException;
 
 class UpdateDiscountRequest extends FormRequest
 {
@@ -81,19 +79,6 @@ class UpdateDiscountRequest extends FormRequest
 
     public function failedValidation(Validator $validator)
     {
-        $errors = $validator->errors();
-        $errorDetails = [];
-
-        foreach ($errors->messages() as $field => $messages) {
-            foreach ($messages as $message) {
-                $errorDetails[$field][] = $message;
-            }
-        }
-        $response = new JsonResponse([
-            'message' => 'Validation failed',
-            'errors' => $errorDetails,
-        ], 422);
-
-        throw new ValidationException($validator, $response);
+        handleFormRequestValidationFailure($validator);
     }
 }

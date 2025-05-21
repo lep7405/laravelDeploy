@@ -17,13 +17,13 @@ Route::delete('/discounts/{id}', [DiscountController::class, 'destroy'])->name('
 
 Route::get('/coupons', [CouponController::class, 'index'])->name('coupons.index');
 Route::post('/coupons', [CouponController::class, 'store'])->name('coupons.create');
-Route::get('/coupons/id/{id}', [CouponController::class, 'findCouponById'])->name('coupons.findCouponById');
 Route::get('/coupons/code/{code}', [CouponController::class, 'findCouponByCode'])->name('coupons.findCouponByCode');
 Route::get('/coupons/discount/{id}/shop/{shop}/', [CouponController::class, 'findCouponByDiscountIdAndShop'])->name('coupons.findCouponByDiscountIdAndShop');
 Route::get('/coupons/discount/{id}', [CouponController::class, 'findCouponByDiscountIdAndCode'])->name('coupons.findCouponByDiscountIdAndCode');
 Route::put('/coupons/{id}', [CouponController::class, 'update'])->name('coupons.update');
 Route::put('/coupons/{id}/status', [CouponController::class, 'updateStatus'])->name('coupons.updateStatus');
-Route::put('/coupons/{id}/times-used', [CouponController::class, 'decrementTimesUsed'])->name('coupons.decrementTimesUsed');
+Route::put('/coupons/{id}/decre-times-used', [CouponController::class, 'decrementTimesUsed'])->name('coupons.decrementTimesUsed');
 Route::delete('/coupons/{id}', [CouponController::class, 'destroy'])->name('coupons.destroy');
+Route::get('/coupons/{id}', [CouponController::class, 'findCouponById'])->name('coupons.findCouponById');
 
 Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');

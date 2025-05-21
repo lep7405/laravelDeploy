@@ -9,10 +9,10 @@ class DiscountService
 {
     public function index($filters)
     {
-        $perPage = Arr::get($filters, 'perPageDiscount');
+        $perPage = Arr::get($filters, 'perPageDiscount',5);
         $search = Arr::get($filters, 'searchDiscount');
         $sortStartedAt = Arr::get($filters, 'sortStartedAt');
-        $pageDiscount = Arr::get($filters, 'pageDiscount');
+        $pageDiscount = Arr::get($filters, 'pageDiscount',1);
         $withCoupon = Arr::get($filters, 'withCoupon', false);
 
         $query = Discount::query();
@@ -59,10 +59,10 @@ class DiscountService
         if ($perPage == -1) {
             $result = $query->get(['id','name','started_at','expired_at','type','value','usage_limit','trial_days']);
             return [
-                'discountData' => $result,
-                'totalPagesDiscount' => 1,
-                'totalItemsDiscount' => $result->count(),
-                'currentPagesDiscount' => 1,
+                'discounts' => $result,
+                'totalPages' => 1,
+                'totalItems' => $result->count(),
+                'currentPages' => 1,
             ];
         }
 

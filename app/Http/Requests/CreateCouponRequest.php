@@ -6,10 +6,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\ValidationException;
 
 class CreateCouponRequest extends FormRequest
 {
@@ -20,26 +17,15 @@ class CreateCouponRequest extends FormRequest
 
     public function rules(): array
     {
-        Log::debug('Validation data:', [
-            'code' => $this->input('code'),
-            'discountId' => $this->input('discountId'),
-            'shop' => $this->input('shop'),
-        ]);
         return [
             'code' => "required|string|max:128|unique:coupons,code",
-            'discountId' => "required|integer|min:1|exists:discounts,id",
+            'discount_id' => "required|integer|min:1|exists:discounts,id",
             'shop' => $this->shopRules(),
+            'status'=>'nullable|boolean',
+            'automatic' => 'nullable|boolean',
         ];
     }
 
-    public function validationData(): array
-    {
-        return [
-            'code' => $this->input('code'),
-            'discountId' => $this->input('discountId'),
-            'shop' => $this->input('shop'),
-        ];
-    }
     protected function shopRules()
     {
         return function ($attribute, $value, $fail) {
@@ -102,19 +88,6 @@ class CreateCouponRequest extends FormRequest
 
     public function failedValidation(Validator $validator)
     {
-        $errors = $validator->errors();
-        $errorDetails = [];
-
-        foreach ($errors->messages() as $field => $messages) {
-            foreach ($messages as $message) {
-                $errorDetails[$field][] = $message;
-            }
-        }
-        $response = new JsonResponse([
-            'message' => 'Validation failed',
-            'errors' => $errorDetails,
-        ], 422);
-
-        throw new HttpResponseException($response);
+        handleFormRequestValidationFailure($validator);
     }
 }
