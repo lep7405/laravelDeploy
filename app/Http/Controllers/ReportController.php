@@ -29,10 +29,7 @@ class ReportController extends Controller
     }
     private function processDiscountData($data): array
     {
-
         $result = $this->discountService->index($data);
-
-
         foreach ($result['discounts'] as $discount) {
             $totalCoupon = 0;
             $totalCouponUsed = 0;
@@ -45,11 +42,21 @@ class ReportController extends Controller
             $discount->setAttribute('totalCoupon', $totalCoupon);
             $discount->setAttribute('totalCouponUsed', $totalCouponUsed);
         }
+        $result['totalPagesDiscount'] = $result['totalPages'];
+        $result['totalItemsDiscount'] = $result['totalItems'];
+        $result['currentPagesDiscount'] = $result['currentPage'];
+        unset($result['totalPages'], $result['totalItems'], $result['currentPage']);
+
         return $result;
     }
     private function processCouponData($data): array
     {
-        return  $this->couponService->index($data);
+        $result =  $this->couponService->index($data);
+        $result['totalPagesCoupon'] = $result['totalPages'];
+        $result['totalItemsCoupon'] = $result['totalItems'];
+        $result['currentPagesCoupon'] = $result['currentPage'];
+
+        return $result;
     }
 
     private function calculate(): array
