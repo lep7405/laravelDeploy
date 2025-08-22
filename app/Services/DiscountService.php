@@ -62,7 +62,7 @@ class DiscountService
                 'discounts' => $result,
                 'totalPages' => 1,
                 'totalItems' => $result->count(),
-                'currentPages' => 1,
+                'currentPage' => 1,
             ];
         }
 

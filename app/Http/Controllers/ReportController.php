@@ -44,7 +44,7 @@ class ReportController extends Controller
         }
         $result['totalPagesDiscount'] = $result['totalPages'];
         $result['totalItemsDiscount'] = $result['totalItems'];
-        $result['currentPagesDiscount'] = $result['currentPage'];
+        $result['currentPageDiscount'] = $result['currentPage'];
         unset($result['totalPages'], $result['totalItems'], $result['currentPage']);
 
         return $result;
@@ -54,7 +54,7 @@ class ReportController extends Controller
         $result =  $this->couponService->index($data);
         $result['totalPagesCoupon'] = $result['totalPages'];
         $result['totalItemsCoupon'] = $result['totalItems'];
-        $result['currentPagesCoupon'] = $result['currentPage'];
+        $result['currentPageCoupon'] = $result['currentPage'];
 
         return $result;
     }
