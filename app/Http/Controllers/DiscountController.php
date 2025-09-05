@@ -133,13 +133,6 @@ class DiscountController extends Controller
             'name', 'type', 'value', 'trial_days',
         ]);
 
-        $exists = Discount::where([
-            'name' => Arr::get($attributes, 'name'),
-            'type' => 'percentage',
-            'value' => Arr::get($attributes, 'value'),
-            'trial_days' => Arr::get($attributes, 'trial_days'),
-        ])->exists();
-
         $discount = Discount::updateOrCreate(
             [
                 'name' => Arr::get($attributes, 'name'),
@@ -152,10 +145,8 @@ class DiscountController extends Controller
             ]
         );
 
-        $statusCode = $exists ? 200 : 201;
-
         return response()->json([
             'message' => $exists ? 'Discount updated successfully' : 'Discount created successfully',
             'discount' => $discount,
-        ], $statusCode);
+        ], 200);
     }}
