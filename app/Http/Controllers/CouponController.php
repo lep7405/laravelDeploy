@@ -25,6 +25,7 @@ class CouponController extends Controller
     public function store(CreateCouponRequest $request){
         $data = $request->validated();
         Log::debug('Create coupon with data: ', $data);
+        $data['times_used'] = 0;
         $coupon = Coupon::create($data);
         return response()->json([
             'message' => 'Coupon created successfully',
